@@ -18,6 +18,7 @@ class Owner:
             break
 
         new_car = Car(car_info, day_price)
+        booking_index = self.contract.get_next_booking_index()
         self.cars[car_id] = {
             'car': new_car,
             'day_price': day_price,
@@ -27,21 +28,27 @@ class Owner:
 
         self.contract.add_booking_details(BookingDetails(new_car, day_price))
 
+
     def deploy(self, blockchain):
+        eth = float(input("Enter the amount of Ether to deploy: "))
         while True:
-            eth = float(input("Enter the amount of Ether to deploy: "))
             if self.balance-eth <=0:
-                user_input = input("Insufficient Balance!!\n**Press Enter to try again**")
-                if user_input:
-                    break
-                continue
-            self.balance -= eth
-            self.contract.owner_deposit(eth)
-            blockchain.add_new_transaction(self.contract)
-            print(f"{eth} Ether deployed")
+                print("Insufficient Balance!!")
+                eth = float(input("Enter the amount of Ether to deploy: "))
+            else:
+                break
+        self.balance -= eth
+        self.contract.owner_deposit(eth)
+        blockchain.add_new_transaction(self.contract)
+        print(f"{eth} Ether deployed")
 
     def withdraw_earnings(self):
-        self.balance += self.contract.withdraw_earnings()
+        earnings = self.contract.withdraw_earnings()
+        if earnings > 0:
+            self.balance += earnings
+            print(f"Withdrew earnings: {earnings} Ether.")
+        else:
+            print("No earnings to withdraw.")
 
     def view_pending_requests(self):
         if not self.pending_requests:
@@ -83,18 +90,27 @@ class Customer:
         self.balance = float(input("Enter initial balance for Customer: "))
 
     def request_book(self, blockchain):
-        eth = float(input("Enter the amount of Ether for booking: "))
+        eth = float(input("Enter the amount as deposit: "))
         self.contract = blockchain.get_unconfirmed_transactions()[0]
         self.contract.client_deposit(eth)
         self.balance -= eth
 
+        booking_index = self.contract.get_next_booking_index()
+        booking_details = BookingDetails(None, booking_index)
+        self.contract.add_booking_details(booking_details)
+
     def pass_number_of_days(self):
         days_no = int(input("Enter the number of days for rental: "))
-        booking_details = self.contract.get_booking_details()
+        booking_details = self.contract.get_booking_details(self.contract.get_next_booking_index())
         booking_details.request(days_no)
 
     def retrieve_balance(self):
-        self.balance += self.contract.retrieve_balance()
+        unwithdrawn_earnings = self.contract.retrieve_balance()
+        if unwithdrawn_earnings > 0:
+            self.balance += unwithdrawn_earnings
+            print(f"Retrieved unwithdrawn earnings: {unwithdrawn_earnings} Ether.")
+        else:
+            print("No unwithdrawn earnings to retrieve.")
 
     def access_car(self, owner):
         if owner.contract.is_car_allowed():

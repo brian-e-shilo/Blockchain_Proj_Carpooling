@@ -54,7 +54,7 @@ class Blockchain:
         Verification includes:
         * Checking if the proof is valid.
         * The previous_hash referred in the block and the hash of latest block
-          in the chain match.
+            in the chain match.
         """
         previous_hash = self.last_block.hash
 
