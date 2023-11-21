@@ -8,7 +8,6 @@ class SmartContract:
         SmartContract.idCounter += 1
         self.client_balance = 0
         self.owner_balance = 0
-        self.booking_index = 0
         self.booking_details_list = []
 
     def retrieve_balance(self):
@@ -31,20 +30,7 @@ class SmartContract:
 
     def add_booking_details(self, booking_details):
         self.booking_details_list.append(booking_details)
-        self.booking_index += 1
 
-    def get_booking_details(self, booking_index=None):
-        if not self.booking_details_list:
-            return None
-
-        if booking_index is None:
-            booking_index = self.booking_index - 1
-
-        if 0 <= booking_index < len(self.booking_details_list):
-            return self.booking_details_list[booking_index]
-        else:
-            return None
-    
     def end_car_rental(self, booking_index):
         booking = self.booking_details_list[booking_index]
         booking.get_car().end_rental()

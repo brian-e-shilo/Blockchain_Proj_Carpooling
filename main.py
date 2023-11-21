@@ -15,15 +15,12 @@ def start():
         print("3. Show Balance")
         print("4. Deploy Blockchain")
         print("5. Add Car to Rent")
-        print("6. Display all owners, customers and cars")
+        print("6. Display all owners, customers, and cars")
         print("7. Request Booking")
         print("8. Encrypt and Store Details")
-        print("9. Allow Car Usage")
-        print("10. Access Car")
-        print("11. End Car Rental and Show Rental Cost")
-        print("12. Withdraw Earnings")
-        print("13. Retrieve Balance")
-        print("14. Exit")
+        print("9. Withdraw Earnings")
+        print("10. Retrieve Balance")
+        print("11. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -45,7 +42,7 @@ def start():
             if ck_id in owners:
                 print(f"Owner balance: {owners[ck_id].balance}")
             elif ck_id in customers:
-                print(f"Owner balance: {customers[ck_id].balance}")
+                print(f"Customer balance: {customers[ck_id].balance}")
             else:
                 print("No such ID exists.")
 
@@ -55,7 +52,7 @@ def start():
                 owners[owner_id].deploy(blockchain)
             else:
                 print("Only owners can deploy blockchain")
-            
+
         elif choice == '5':
             owner_id = input("Enter Owner ID: ")
             if owner_id in owners:
@@ -93,15 +90,14 @@ def start():
                     for i, (owner_id, car_id, car) in enumerate(available_cars, start=1):
                         print(f"{i}) Owner: {owner_id}, Car Name: {car.car_info}, Price: {car.day_price}")
 
-                while True:
-                    choice = int(input("Enter choice: ")) - 1
-                    if 0 <= choice < len(available_cars):
-                        owner_id, car_id, car = available_cars[choice]
-                        customers[customer_id].request_book(blockchain)
-                        customers[customer_id].pass_number_of_days()
-                        owners[owner_id].allow_car_usage(car_id)
-                    else:
-                        print("Invalid Input!!")
+                    while True:
+                        choice = int(input("Enter choice: ")) - 1
+                        if 0 <= choice < len(available_cars):
+                            owner_id, car_id, car = available_cars[choice]
+                            customers[customer_id].request_book(blockchain, owners[owner_id], car_id)
+                            break
+                        else:
+                            print("Invalid Input!!")
             else:
                 print("Only customers can rent cars")
 
@@ -112,47 +108,19 @@ def start():
         elif choice == '9':
             owner_id = input("Enter Owner ID: ")
             if owner_id in owners:
-                owners[owner_id].allow_car_usage()
+                owners[owner_id].withdraw_earnings()
             else:
                 print("Owner not found.")
 
         elif choice == '10':
             customer_id = input("Enter Customer ID: ")
             if customer_id in customers:
-                owner_id = input("Enter Owner ID: ")
-                if owner_id in owners:
-                    customers[customer_id].access_car(owners[owner_id])
-                else:
-                    print("Owner not found.")
-            else:
-                print("Customer not found.")
-
-        elif choice == '11':
-            customer_id = input("Enter Customer ID: ")
-            if customer_id in customers:
-                owner_id = input("Enter Owner ID: ")
-                if owner_id in owners:
-                    customers[customer_id].end_car_rental(owners[owner_id])
-                else:
-                    print("Owner not found.")
-            else:
-                print("Customer not found.")
-
-        elif choice == '12':
-            owner_id = input("Enter Owner ID: ")
-            if owner_id in owners:
-                owners[owner_id].withdraw_earnings()
-            else:
-                print("Owner not found.")
-                
-        elif choice == '13':
-            customer_id = input("Enter Customer ID: ")
-            if customer_id in customers:
                 customers[customer_id].retrieve_balance()
             else:
                 print("Customer not found.")
 
-        elif choice == '14':
+        elif choice == '11':
+            print("THANK YOU!")
             break
 
         else:

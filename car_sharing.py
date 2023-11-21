@@ -18,7 +18,6 @@ class Owner:
             break
 
         new_car = Car(car_info, day_price)
-        booking_index = self.contract.get_next_booking_index()
         self.cars[car_id] = {
             'car': new_car,
             'day_price': day_price,
@@ -28,11 +27,10 @@ class Owner:
 
         self.contract.add_booking_details(BookingDetails(new_car, day_price))
 
-
     def deploy(self, blockchain):
         eth = float(input("Enter the amount of Ether to deploy: "))
         while True:
-            if self.balance-eth <=0:
+            if self.balance - eth <= 0:
                 print("Insufficient Balance!!")
                 eth = float(input("Enter the amount of Ether to deploy: "))
             else:
@@ -74,7 +72,7 @@ class Owner:
             if 1 <= choice <= len(self.pending_requests):
                 request = self.pending_requests.pop(choice - 1)
                 # Now you can proceed with allowing car usage for the selected request
-                self.contract.allow_car_usage()
+                self.contract.allow_car_usage(request['booking_index'])
                 print(f"Approved request for Car: {request['car_info']} for Customer ID: {request['customer_id']}")
             else:
                 print("Invalid choice.")
@@ -89,14 +87,13 @@ class Customer:
         self.contract = SmartContract()
         self.balance = float(input("Enter initial balance for Customer: "))
 
-    def request_book(self, blockchain):
+    def request_book(self, blockchain, owner, car_id):
         eth = float(input("Enter the amount as deposit: "))
         self.contract = blockchain.get_unconfirmed_transactions()[0]
         self.contract.client_deposit(eth)
         self.balance -= eth
 
-        booking_index = self.contract.get_next_booking_index()
-        booking_details = BookingDetails(None, booking_index)
+        booking_details = BookingDetails(owner.cars[car_id]['car'], owner.cars[car_id]['day_price'])
         self.contract.add_booking_details(booking_details)
 
     def pass_number_of_days(self):
@@ -117,7 +114,6 @@ class Customer:
             self.contract.get_car().access()
         else:
             print("Access denied. Car access needs approval from the owner.")
-
 
 class Car:
     def __init__(self, car_info, day_price):
