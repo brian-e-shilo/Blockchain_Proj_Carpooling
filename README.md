@@ -55,7 +55,7 @@ The code is organized into several classes, each serving a specific purpose:
 To run the system, execute the script:
 
 ```bash
-python script_name.py
+python main.py
 ```
 
 Follow the on-screen instructions to interact with the Blockchain Car Pooling System.
@@ -64,5 +64,6 @@ Follow the on-screen instructions to interact with the Blockchain Car Pooling Sy
 
 - Ensure that Python is installed on your system.
 - This system is a simplified demonstration and may not cover all edge cases or real-world scenarios.
+- This is just a simulation of what a car pooling system could be that runs on the CLI
 
 Enjoy car sharing through the power of blockchain! 🌐🚗🔐
