@@ -67,3 +67,6 @@ Follow the on-screen instructions to interact with the Blockchain Car Pooling Sy
 - This is just a simulation of what a car pooling system could be that runs on the CLI
 
 Enjoy car sharing through the power of blockchain! 🌐🚗🔐
+# Team Members
+## Aarya Ashok K
+## Tejasv Goyal
