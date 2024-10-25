@@ -70,3 +70,6 @@ Enjoy car sharing through the power of blockchain! 🌐🚗🔐
 # Team Members
 ## Aarya Ashok K
 ## Tejasv Goyal
+## Brian E Shilo
+## Moses Pereira
+## Pranav Sunil Deore
